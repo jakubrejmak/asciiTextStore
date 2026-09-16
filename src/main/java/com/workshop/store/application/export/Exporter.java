@@ -1,4 +1,4 @@
-package com.workshop.store.application;
+package com.workshop.store.application.export;
 
 public interface Exporter {
     void export(String string);

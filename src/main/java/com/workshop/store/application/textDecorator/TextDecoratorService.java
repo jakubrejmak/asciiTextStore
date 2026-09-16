@@ -2,7 +2,8 @@ package com.workshop.store.application.textDecorator;
 
 import java.util.Arrays;
 
-import com.workshop.store.application.Exporter;
+import com.workshop.store.application.Result;
+import com.workshop.store.application.export.Exporter;
 
 public class TextDecoratorService {
     private Exporter exporter;
@@ -11,7 +12,7 @@ public class TextDecoratorService {
         this.exporter = exporter;
     }
 
-    public String decorate(DecorateCommand command) {
+    public Result<String, TextDecoratorError> decorate(DecorateCommand command) {
         String[] parts = TextDecorator.partition(command.text(), '\n', command.decoratorLineLength());
 
         if (command.centerText()) {
@@ -27,6 +28,6 @@ public class TextDecoratorService {
 
         this.exporter.export(line);
 
-        return TextDecorator.decorate(line, command.decorateWith());
+        return Result.success(TextDecorator.decorate(line, command.decorateWith()));
     }
 }
