@@ -1,5 +1,5 @@
 package com.workshop.store.application.export;
 
 public interface Exporter {
-    void export(String string);
+    void export(String string) throws ExporterException;
 }

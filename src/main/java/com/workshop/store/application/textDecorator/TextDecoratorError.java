@@ -1,31 +1,45 @@
 package com.workshop.store.application.textDecorator;
 
-public sealed interface TextDecoratorError {
-    public String code();
+import java.util.List;
 
-    public String message();
+import com.workshop.store.application.ApplicationError;
 
-    public record EmptyTextError() implements TextDecoratorError {
+public sealed interface TextDecoratorError extends ApplicationError {
+
+    public record Validation(List<DecorateCommandValidationError> validationErrors)
+            implements TextDecoratorError {
+
+        public Validation(List<DecorateCommandValidationError> validationErrors) {
+            this.validationErrors = List.copyOf(validationErrors);
+        }
+
         @Override
         public String code() {
-            return "empty_text";
+            return "validation";
         }
 
         @Override
         public String message() {
-            return "Text field is empty";
-        }
-    };
+            String[] errors = this.validationErrors()
+                    .stream()
+                    .map(e -> e.message())
+                    .toArray(String[]::new);
 
-    public record InvalidLineLength(int length) implements TextDecoratorError {
+            return errors.length + " validation errors occured: \n"
+                    + String.join("\n", errors);
+        }
+
+    }
+
+    public record Export() implements TextDecoratorError {
         @Override
         public String code() {
-            return "invalid_line_length";
+            return "export_error";
         }
 
         @Override
         public String message() {
-            return "The length: " + this.length + " is not valid";
+            return "Export failed";
         }
     }
 }

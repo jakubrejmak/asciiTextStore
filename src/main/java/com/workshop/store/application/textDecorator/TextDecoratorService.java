@@ -1,9 +1,11 @@
 package com.workshop.store.application.textDecorator;
 
 import java.util.Arrays;
+import java.util.List;
 
 import com.workshop.store.application.Result;
 import com.workshop.store.application.export.Exporter;
+import com.workshop.store.application.export.ExporterException;
 
 public class TextDecoratorService {
     private Exporter exporter;
@@ -13,6 +15,12 @@ public class TextDecoratorService {
     }
 
     public Result<String, TextDecoratorError> decorate(DecorateCommand command) {
+
+        List<DecorateCommandValidationError> errors = DecorateCommandRuleset.create().validate(command);
+        if (!errors.isEmpty()) {
+            return Result.failure(new TextDecoratorError.Validation(errors));
+        }
+
         String[] parts = TextDecorator.partition(command.text(), '\n', command.decoratorLineLength());
 
         if (command.centerText()) {
@@ -26,7 +34,11 @@ public class TextDecoratorService {
 
         String line = String.join("\n", parts);
 
-        this.exporter.export(line);
+        try {
+            this.exporter.export(line);
+        } catch (ExporterException e) {
+            return Result.failure(new TextDecoratorError.Export());
+        }
 
         return Result.success(TextDecorator.decorate(line, command.decorateWith()));
     }

@@ -15,11 +15,11 @@ import com.workshop.store.application.textDecorator.TextDecoratorService;
 public class DecorateTextController {
     private ResponseEntity<ProblemDetail> errorResponse(TextDecoratorError error) {
         HttpStatus status = switch (error) {
-            case TextDecoratorError.EmptyTextError ignored ->
+            case TextDecoratorError.Validation ignored ->
                 HttpStatus.BAD_REQUEST;
 
-            case TextDecoratorError.InvalidLineLength ignored ->
-                HttpStatus.BAD_REQUEST;
+            case TextDecoratorError.Export ignored ->
+                HttpStatus.INTERNAL_SERVER_ERROR;
         };
 
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(
