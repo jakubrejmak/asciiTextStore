@@ -64,7 +64,13 @@ public class TextDecorator {
         for (int i = 0; i < string.length(); i++) {
             char c = string.charAt(i);
 
-            if (c == partitionBy || i % maxPartitionLength - 1 == 0) {
+            if (c == partitionBy) {
+                parts.add(current.toString());
+                current.setLength(0);
+                continue;
+            }
+
+            if (current.length() == maxPartitionLength) {
                 parts.add(current.toString());
                 current.setLength(0);
             }
@@ -72,16 +78,22 @@ public class TextDecorator {
             current.append(c);
         }
 
+        parts.add(current.toString());
+
         return parts.toArray(new String[0]);
     }
 
-    public static String decorate(String text, char decorateWith) {
-        return decorate(text, decorateWith, text.length());
+    public static String decorate(String text, char decorateWith, boolean multiline) {
+        return decorate(text, decorateWith, text.length(), multiline);
     }
 
-    public static String decorate(String text, char decorateWith, int length) {
+    public static String decorate(String text, char decorateWith, int length, boolean multiline) {
         if (length < 1) {
             return "";
+        }
+
+        if (multiline) {
+            text = "\n" + text + "\n";
         }
 
         String decoratorLine = TextDecorator.multiplyChar(decorateWith, length);

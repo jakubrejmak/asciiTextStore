@@ -34,12 +34,14 @@ public class TextDecoratorService {
 
         String line = String.join("\n", parts);
 
+        String decorated = TextDecorator.decorate(line, command.decorateWith(), command.multiline());
+
         try {
-            this.exporter.export(line);
+            this.exporter.export(decorated);
         } catch (ExporterException e) {
             return Result.failure(new TextDecoratorError.Export());
         }
 
-        return Result.success(TextDecorator.decorate(line, command.decorateWith()));
+        return Result.success(decorated);
     }
 }

@@ -13,6 +13,12 @@ import com.workshop.store.application.textDecorator.TextDecoratorService;
 
 @RestController
 public class DecorateTextController {
+    private final TextDecoratorService service;
+
+    public DecorateTextController(TextDecoratorService service) {
+        this.service = service;
+    }
+
     private ResponseEntity<ProblemDetail> errorResponse(TextDecoratorError error) {
         HttpStatus status = switch (error) {
             case TextDecoratorError.Validation ignored ->
@@ -33,7 +39,6 @@ public class DecorateTextController {
 
     @PostMapping("/api/v1/decorate")
     public ResponseEntity<?> decorateText(
-            TextDecoratorService service,
             @RequestBody DecorateTextRequest request) {
         return switch (service.decorate(request.toCommand())) {
             case Result.Success<String, TextDecoratorError> success ->

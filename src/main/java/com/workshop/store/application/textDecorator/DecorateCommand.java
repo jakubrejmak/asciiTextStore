@@ -4,5 +4,6 @@ public record DecorateCommand(
         String text,
         int decoratorLineLength,
         char decorateWith,
-        boolean centerText) {
+        boolean centerText,
+        boolean multiline) {
 };

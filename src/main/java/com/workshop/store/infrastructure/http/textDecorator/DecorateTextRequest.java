@@ -4,9 +4,10 @@ import com.workshop.store.application.textDecorator.DecorateCommand;
 
 public record DecorateTextRequest(
         String text,
-        char decorator) {
+        char decorator,
+        boolean multiline) {
 
     public DecorateCommand toCommand() {
-        return new DecorateCommand(text, text.length(), decorator, true);
+        return new DecorateCommand(text, text.length(), decorator, true, multiline);
     }
 };
